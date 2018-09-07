@@ -27,6 +27,12 @@ describe("commandParser", () => {
     expect(parsedCommand.originalLine).toEqual(testCommandLine)
   })
 
+  test("parser should not parse line", () => {
+    const parser = new CommandParser([{ name: "Driver", validator: "^\\w*$" }])
+    const parsedCommand = parser.parseLine("Driver Really Bad Driver")
+    expect(parsedCommand.error).toBeDefined()
+  })
+
   test("parser should fail to parse command that is not found", () => {
     const parser = new CommandParser([{ name: commandName, validator: commandRegex }])
     const parsedCommand = parser.parseLine(`NotFoundCommand ${commandData}`)

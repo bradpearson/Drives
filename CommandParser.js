@@ -23,9 +23,9 @@ module.exports = class CommandParser {
     let parsedCommand
 
     if (command) {
-      const commandData = lineArr.splice(1).join(" ")
       // regex validate command data format
       if (command.validator.test(line)) {
+        const commandData = lineArr.splice(1).join(" ")
         parsedCommand = { commandName: command.name, commandData, originalLine: line }
       } else {
         parsedCommand = { error: "Command validator failed", originalLine: line }

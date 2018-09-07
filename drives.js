@@ -11,7 +11,7 @@ const Driver = require("./Driver").Driver
 
 const commandNames = [
   { name: "Trip", validator: "^\\w+\\s\\w+\\s\\d{1,2}:\\d{2}\\s\\d{1,2}:\\d{2}\\s\\d[.]?[\\d]?" },
-  { name: "Driver", validator: "^\\w+" },
+  { name: "Driver", validator: "^\\w*\\s\\w*$" },
 ]
 
 module.exports = () => {
@@ -33,7 +33,13 @@ module.exports = () => {
 
     // parse and validate the commands in the file
     const commandParser = new CommandParser(commandNames)
-    const parsedCommands = fileContents.map(l => commandParser.parseLine(l))
+    const parsedCommands = []
+    fileContents.forEach(l => {
+      const parsedLine = commandParser.parseLine(l)
+      if (!parsedLine.error) {
+        parsedCommands.push(parsedLine)
+      }
+    })
 
     // Create the data store
     const tripDataStore = new DataStore({ drivers: {} })
