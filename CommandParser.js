@@ -9,7 +9,7 @@ module.exports = class CommandParser {
    * @param {array} commands - Maps of commandNames and commandValidator regex {name:<name>, validator:<regex expression>}
    */
   constructor(commands = []) {
-    this.commands = commands.map(c => Object.assign({}, c, { validator: new RegExp(c.validator) }));
+    this.commands = commands.map(c => Object.assign({}, c, { validator: new RegExp(c.validator) }))
   }
 
   /**
@@ -17,23 +17,23 @@ module.exports = class CommandParser {
    * @param {string} line - line format should be <command> <command data>
    */
   parseLine(line) {
-    const lineArr = line.split(' ');
-    const command = this.commands.find(c => c.name === lineArr[0]);
+    const lineArr = line.split(" ")
+    const command = this.commands.find(c => c.name === lineArr[0])
 
-    let parsedCommand;
+    let parsedCommand
 
     if (command) {
-      const commandData = lineArr.splice(1).join(' ');
+      const commandData = lineArr.splice(1).join(" ")
       // regex validate command data format
       if (command.validator.test(line)) {
-        parsedCommand = { commandName: command.name, commandData, originalLine: line };
+        parsedCommand = { commandName: command.name, commandData, originalLine: line }
       } else {
-        parsedCommand = { error: 'Command validator failed', originalLine: line };
+        parsedCommand = { error: "Command validator failed", originalLine: line }
       }
     } else {
-      parsedCommand = { error: 'Command not found', originalLine: line };
+      parsedCommand = { error: "Command not found", originalLine: line }
     }
 
-    return parsedCommand;
+    return parsedCommand
   }
-};
+}

@@ -1,14 +1,14 @@
-const fs = require('fs');
+const fs = require("fs")
 
 /**
  * Handles the input reading from files
  */
 module.exports = class InputHandler {
-  constructor(fileName = 'input.txt') {
+  constructor(fileName = "input.txt") {
     if (!fs.existsSync(fileName)) {
-      throw new Error(`couldn't find file ${fileName}`);
+      throw new Error(`couldn't find file ${fileName}`)
     } else {
-      this.fileName = fileName;
+      this.fileName = fileName
     }
   }
 
@@ -16,7 +16,7 @@ module.exports = class InputHandler {
    * Reads in a file and returns an array per line of the file
    */
   readFile() {
-    const fileContents = fs.readFileSync(this.fileName, { encoding: 'utf8' });
-    return fileContents.split('\n');
+    const fileContents = fs.readFileSync(this.fileName, { encoding: "utf8" })
+    return fileContents.split("\n")
   }
-};
+}
