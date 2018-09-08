@@ -1,6 +1,8 @@
+const logger = require("./logger")
+
 /**
  * Handles the parsing of commands
- * @class
+ * @class CommandParser
  */
 module.exports = class CommandParser {
   /**
@@ -28,9 +30,11 @@ module.exports = class CommandParser {
         const commandData = lineArr.splice(1).join(" ")
         parsedCommand = { commandName: command.name, commandData, originalLine: line }
       } else {
+        logger.debug(`command [${line}] was not valid. Discarding`)
         parsedCommand = { error: "Command validator failed", originalLine: line }
       }
     } else {
+      logger.debug(`command [${line}] was not found. Discarding`)
       parsedCommand = { error: "Command not found", originalLine: line }
     }
 

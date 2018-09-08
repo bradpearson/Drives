@@ -69,4 +69,22 @@ describe("driver action tests with data store", () => {
     //console.log("avg: %o", results)
     expect(results.Brad.mileageAndSpeedAverage).toBeDefined()
   })
+
+  test("averaging driver trips should discard trip > 100 mph", () => {
+    const Brad = new Driver("Brad")
+    Brad.addTripData("Brad 11:01 11:10 200.1")
+    Brad.addTripData("Brad 12:00 13:00 60")
+    const ds = new DataStore({ drivers: { Brad } })
+    const results = ds.runActionOnMembers("drivers", driverActions.averageDriverTrips, true)
+    expect(results.Brad.mileageAndSpeedAverage.speed).toEqual(60)
+  })
+
+  test("averaging driver trips should discard trip < 5 mph", () => {
+    const Brad = new Driver("Brad")
+    Brad.addTripData("Brad 10:00 11:00 5")
+    Brad.addTripData("Brad 12:00 13:00 60")
+    const ds = new DataStore({ drivers: { Brad } })
+    const results = ds.runActionOnMembers("drivers", driverActions.averageDriverTrips, true)
+    expect(results.Brad.mileageAndSpeedAverage.speed).toEqual(60)
+  })
 })

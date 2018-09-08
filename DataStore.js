@@ -1,5 +1,8 @@
+const logger = require("./logger")
+
 /**
- * A general data storage class for handling data organization
+ * A general data storage class for handling data organization. 
+ * Top level entities can be arrays or objects
  * @class DataStore
  */
 module.exports = class DataStore {
@@ -12,6 +15,11 @@ module.exports = class DataStore {
     this.store = rootStoreObj
   }
 
+  /**
+   * Runs an action that is passed in on the entity named
+   * @param {string} entityName - the name of the top level collection
+   * @param {function} action - a function that is passed the top level entity
+   */
   runActionOnEntity(entityName, action) {
     const entityCollection = this.store[entityName]
     if (entityCollection) {
@@ -23,6 +31,13 @@ module.exports = class DataStore {
     return false
   }
 
+  /**
+   *
+   * @param {string} entityName
+   * @param {function} actionFn
+   * @param {bool} returnResults - If true, returns the modified collection instead of updating it locally.
+   *                               Used for ephemeral operations on data.
+   */
   runActionOnMembers(entityName, actionFn, returnResults = false) {
     const keysOrMap = collection => {
       let newCollection
@@ -55,12 +70,16 @@ module.exports = class DataStore {
     }
   }
 
+  /**
+   * Returns a copy of the top level entity
+   * @param {string} collectionName
+   */
   getCollection(collectionName) {
     if (collectionName) {
       let coll = Array.isArray(this.store[collectionName])
         ? this.store[collectionName].slice(0)
         : Object.assign({}, this.store[collectionName])
-      //console.log("returning %o", coll)
+      logger.debug(`getCollection: ${JSON.stringify(coll)}`)
       return coll
     }
   }

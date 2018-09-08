@@ -1,3 +1,8 @@
+const logger = require("./logger")
+
+/**
+ * A class representatoin of a driver entity
+ */
 class Driver {
   constructor(driverName) {
     if (!driverName) {
@@ -34,9 +39,9 @@ class Driver {
     }
   }
 
-  updateDriverAttribute(attributeName, attributeValue) {
-    this[attributeName] = attributeValue
-  }
+  // updateDriverAttribute(attributeName, attributeValue) {
+  //   this[attributeName] = attributeValue
+  // }
 
   toString() {
     return this.name
@@ -59,33 +64,45 @@ const addDriver = (driver, initialTripData = []) => {
   }
 }
 
+addDriver.name = "addDriver"
+
 /**
- *
+ * Action to add trip data to a driver in the data store
  * @param {string} driverName
  * @param {string} tripData
  */
-const addTripDataToDriver = (driverName, tripData) => {
-  return driver => {
-    if (tripData && driver.name === driverName) {
-      driver.addTripData(tripData)
-      //console.log("%s %o", driverName, driver)
-    }
-    return driver
+const addTripDataToDriver = (driverName, tripData) => driver => {
+  if (tripData && driver.name === driverName) {
+    driver.addTripData(tripData)
+    logger.debug(`adding trip data [${tripData}] to ${driverName}`)
   }
+  return driver
 }
 
+/**
+ * Actoin for data store that performs calculation needed for final report
+ * @param {Driver} driver
+ */
 const averageDriverTrips = driver => {
   const mileageAndSpeedAverage = driver.trips.reduce(
     (acc, trip) => {
+      const tripTime = require("./utils").simpleTimeDiff(trip.startTime, trip.endTime)
+      const tripMph = trip.distance / tripTime
+
       const newDistance = acc.distance + trip.distance
-      const newTime = acc.time + require("./utils").simpleTimeDiff(trip.startTime, trip.endTime)
+      const newTime = acc.time + tripTime
       const newSpeed = (acc.distance + trip.distance) / newTime
-      return { distance: newDistance, speed: newSpeed, time: newTime }
+      const calcToReturn =
+        tripMph > 5 && tripMph < 100
+          ? { distance: newDistance, speed: newSpeed, time: newTime }
+          : { distance: acc.distance, speed: acc.speed, time: acc.time }
+      return calcToReturn
     },
     { distance: 0, speed: 0, time: 0 }
   )
   return Object.assign({}, driver, { mileageAndSpeedAverage })
 }
+averageDriverTrips.name = "averageDriverTrips"
 
 module.exports = {
   Driver,

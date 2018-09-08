@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest --watchAll",
+    "start": "node start.js data.txt",
+    "test": "jest",
+    "testAll": "jest --watchAll",
     "debugTests": "node --inspect-brk ./node_modules/jest/bin/jest.js --runInBand"
   },
   "keywords": [],

@@ -1,4 +1,5 @@
 const CommandParser = require("./CommandParser")
+require("./logger").setDebug(1)
 
 const commandRegex = "^\\w+\\s\\w+\\s\\d{1,2}:\\d{2}\\s\\d{1,2}:\\d{2}\\s\\d[.]?[\\d]?"
 const commandName = "Trip"

@@ -9,18 +9,25 @@ const CommandParser = require("./CommandParser")
 const driverActions = require("./Driver").actions
 const Driver = require("./Driver").Driver
 
+// These are the command regex that validate each line of the input file. These could be externalied for different
+// environments to for dynamic configuration
 const commandNames = [
   { name: "Trip", validator: "^\\w+\\s\\w+\\s\\d{1,2}:\\d{2}\\s\\d{1,2}:\\d{2}\\s\\d[.]?[\\d]?" },
   { name: "Driver", validator: "^\\w*\\s\\w*$" },
 ]
 
+/**
+ * This is the default export function that is a wrapper for the main processing flow
+ */
 module.exports = () => {
-  console.log = logger.log
   // process.argv[2] is the first input position and should contain the filename to process
   if (process.argv.length > 2) {
     // assume the input file is in the current folder where this script was kicked off
     const inputFile = process.argv[2]
     const inputFilePath = path.join(process.cwd(), inputFile)
+
+    const debuggerOn = process.argv.length > 3 ? process.argv[3] : null
+    require("./logger").setDebug(debuggerOn)
 
     // Load the file input
     let fileContents
@@ -29,6 +36,12 @@ module.exports = () => {
       fileContents = inputHandler.readFile()
     } catch (err) {
       logger.error(`Error loading input file: ${err.message}`)
+      return -1
+    }
+
+    if (!fileContents || fileContents.length == 0) {
+      logger.info(`input file was empty. Not processing any data.`)
+      return 0
     }
 
     // parse and validate the commands in the file
@@ -36,7 +49,7 @@ module.exports = () => {
     const parsedCommands = []
     fileContents.forEach(l => {
       const parsedLine = commandParser.parseLine(l)
-      if (!parsedLine.error) {
+      if (parsedLine && !parsedLine.error) {
         parsedCommands.push(parsedLine)
       }
     })
@@ -86,8 +99,8 @@ module.exports = () => {
       })
       .sort((a, b) => b.totalDistance - a.totalDistance)
 
-    reportData.forEach(rd => process.stdout.write(`${rd.lineOut}\n`))
+    return reportData
   } else {
-    logger.log(`drives.js usage: node drives.js <input file>`)
+    logger.info(`drives.js usage: node drives.js <input file>`)
   }
 }

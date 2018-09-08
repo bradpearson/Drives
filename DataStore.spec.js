@@ -2,6 +2,9 @@ const DataStore = require("./DataStore")
 const Driver = require("./Driver")
 
 describe("Data store tests", () => {
+  beforeAll(() => {
+    require("./logger").setDebug(1)
+  })
   test("data store should initialize a named store", () => {
     const ds = new DataStore({ drivers: [] })
     expect(ds.getCollection("drivers")).toBeDefined()
