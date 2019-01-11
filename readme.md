@@ -2,7 +2,7 @@
 
 Author: [Brad Pearson](https://github.com/bradpearson)
 
-Thank you for taking the time to review this document and the **Drives** application that I created per the [Root coding problem statement](https://gist.github.com/dan-manges/1e1854d0704cb9132b74). This is a JavaScript based application that runs in Node.js. This was developed and tested on macOS.
+Thank you for taking the time to review this document and the **Drives** application that I created per the problem statement. This is a JavaScript based application that runs in Node.js. This was developed and tested on macOS.
 
 ## Getting Started
 
